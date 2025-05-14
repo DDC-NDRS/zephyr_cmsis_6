@@ -1545,16 +1545,30 @@ typedef struct
   \brief      Definitions for base addresses, unions, and structures.
   @{
  */
-
 /* Memory mapping of Core Hardware */
+#if defined(_MSC_VER) /* #CUSTOM@NDRS */
+#include "mcu_reg_stub.h"
+#endif
+
+#if defined(_MSC_VER) /* #CUSTOM@NDRS */
 #define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address */
 #define ITM_BASE            (0xE0000000UL)                            /*!< ITM Base Address */
 #define DWT_BASE            (0xE0001000UL)                            /*!< DWT Base Address */
 #define TPIU_BASE           (0xE0040000UL)                            /*!< TPIU Base Address */
 #define DCB_BASE            (0xE000EDF0UL)                            /*!< Core Debug Base Address */
 #define SysTick_BASE        (SCS_BASE +  0x0010UL)                    /*!< SysTick Base Address */
+#define NVIC_BASE           ((uintptr_t)ut_mcu_nvic_ptr)              /*!< NVIC Base Address */
+#define SCB_BASE            ((uintptr_t)ut_mcu_scb_ptr)               /*!< System Control Block Base Address */
+#else
+#define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address */
+#define ITM_BASE            (0xE0000000UL)                            /*!< ITM Base Address */
+#define DWT_BASE            (0xE0001000UL)                            /*!< DWT Base Address */
+#define TPI_BASE            (0xE0040000UL)                            /*!< TPI Base Address */
+#define DCB_BASE            (0xE000EDF0UL)                            /*!< Core Debug Base Address */
+#define SysTick_BASE        (SCS_BASE +  0x0010UL)                    /*!< SysTick Base Address */
 #define NVIC_BASE           (SCS_BASE +  0x0100UL)                    /*!< NVIC Base Address */
 #define SCB_BASE            (SCS_BASE +  0x0D00UL)                    /*!< System Control Block Base Address */
+#endif
 
 #define SCnSCB              ((SCnSCB_Type    *)     SCS_BASE      )   /*!< System control Register not in SCB */
 #define SCB                 ((SCB_Type       *)     SCB_BASE      )   /*!< SCB configuration struct */

@@ -646,10 +646,19 @@ typedef struct
  */
 
 /* Memory mapping of Core Hardware */
+#if (__GTEST == 1U)
+#include "mcu_reg_stub.h"
+
+#define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address */
+#define SysTick_BASE        (ut_mcu_systick_ptr)                      /*!< SysTick Base Address */
+#define NVIC_BASE           (ut_mcu_nvic_ptr)                         /*!< NVIC Base Address */
+#define SCB_BASE            (ut_mcu_scb_ptr)                          /*!< System Control Block Base Address */
+#else
 #define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address */
 #define SysTick_BASE        (SCS_BASE +  0x0010UL)                    /*!< SysTick Base Address */
 #define NVIC_BASE           (SCS_BASE +  0x0100UL)                    /*!< NVIC Base Address */
 #define SCB_BASE            (SCS_BASE +  0x0D00UL)                    /*!< System Control Block Base Address */
+#endif
 
 #define SCB                 ((SCB_Type       *)     SCB_BASE      )   /*!< SCB configuration struct */
 #define SysTick             ((SysTick_Type   *)     SysTick_BASE  )   /*!< SysTick configuration struct */

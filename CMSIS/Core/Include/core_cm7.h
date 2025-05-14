@@ -1769,6 +1769,18 @@ typedef struct
  */
 
 /* Memory mapping of Core Hardware */
+#if (__GTEST == 1U) /* #CUSTOM@NDRS */
+#include "mcu_reg_stub.h"
+
+#define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address */
+#define ITM_BASE            (0xE0000000UL)                            /*!< ITM Base Address */
+#define DWT_BASE            (0xE0001000UL)                            /*!< DWT Base Address */
+#define TPIU_BASE           (0xE0040000UL)                            /*!< TPIU Base Address */
+#define DCB_BASE            (0xE000EDF0UL)                            /*!< Core Debug Base Address */
+#define SysTick_BASE        ((uintptr_t)ut_mcu_systick_ptr)           /*!< SysTick Base Address */
+#define NVIC_BASE           ((uintptr_t)ut_mcu_nvic_ptr)              /*!< NVIC Base Address */
+#define SCB_BASE            ((uintptr_t)ut_mcu_scb_ptr)               /*!< System Control Block Base Address */
+#else
 #define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address */
 #define ITM_BASE            (0xE0000000UL)                            /*!< ITM Base Address */
 #define DWT_BASE            (0xE0001000UL)                            /*!< DWT Base Address */
@@ -1777,6 +1789,7 @@ typedef struct
 #define SysTick_BASE        (SCS_BASE +  0x0010UL)                    /*!< SysTick Base Address */
 #define NVIC_BASE           (SCS_BASE +  0x0100UL)                    /*!< NVIC Base Address */
 #define SCB_BASE            (SCS_BASE +  0x0D00UL)                    /*!< System Control Block Base Address */
+#endif
 
 #define SCnSCB              ((SCnSCB_Type    *)     SCS_BASE      )   /*!< System control Register not in SCB */
 #define SCB                 ((SCB_Type       *)     SCB_BASE      )   /*!< SCB configuration struct */

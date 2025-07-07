@@ -1798,7 +1798,8 @@ typedef struct
 #define ITM                 ((ITM_Type       *)     ITM_BASE      )   /*!< ITM configuration struct */
 #define DWT                 ((DWT_Type       *)     DWT_BASE      )   /*!< DWT configuration struct */
 #define TPIU                ((TPIU_Type      *)     TPIU_BASE     )   /*!< TPIU configuration struct */
-#define DCB                 ((DCB_Type       *)     DCB_BASE      )   /*!< DCB configuration struct */
+#define DCBx                ((DCB_Type       *)     DCB_BASE      )   /*!< DCB configuration struct */
+                                                                      /*!< #CUSTOM@NDRS : DCB -> DCBx for compatibility with MSVC */
 
 #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1U)
   #define MPU_BASE          (SCS_BASE +  0x0D90UL)                    /*!< Memory Protection Unit */

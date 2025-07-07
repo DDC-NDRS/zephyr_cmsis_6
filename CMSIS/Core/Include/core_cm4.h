@@ -1548,15 +1548,13 @@ typedef struct
 /* Memory mapping of Core Hardware */
 #if defined(_MSC_VER) /* #CUSTOM@NDRS */
 #include "mcu_reg_stub.h"
-#endif
 
-#if defined(_MSC_VER) /* #CUSTOM@NDRS */
 #define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address */
 #define ITM_BASE            (0xE0000000UL)                            /*!< ITM Base Address */
 #define DWT_BASE            (0xE0001000UL)                            /*!< DWT Base Address */
 #define TPIU_BASE           (0xE0040000UL)                            /*!< TPIU Base Address */
 #define DCB_BASE            (0xE000EDF0UL)                            /*!< Core Debug Base Address */
-#define SysTick_BASE        (SCS_BASE +  0x0010UL)                    /*!< SysTick Base Address */
+#define SysTick_BASE        ((uintptr_t)ut_mcu_systick_ptr)           /*!< SysTick Base Address */
 #define NVIC_BASE           ((uintptr_t)ut_mcu_nvic_ptr)              /*!< NVIC Base Address */
 #define SCB_BASE            ((uintptr_t)ut_mcu_scb_ptr)               /*!< System Control Block Base Address */
 #else
@@ -1577,7 +1575,8 @@ typedef struct
 #define ITM                 ((ITM_Type       *)     ITM_BASE      )   /*!< ITM configuration struct */
 #define DWT                 ((DWT_Type       *)     DWT_BASE      )   /*!< DWT configuration struct */
 #define TPIU                ((TPIU_Type      *)     TPIU_BASE     )   /*!< TPIU configuration struct */
-#define DCB                 ((DCB_Type       *)     DCB_BASE      )   /*!< DCB configuration struct */
+#define DCBx                ((DCB_Type       *)     DCB_BASE      )   /*!< DCB configuration struct */
+                                                                      /*!< #CUSTOM@NDRS : DCB -> DCBx for compatibility with MSVC */
 
 #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1U)
   #define MPU_BASE          (SCS_BASE +  0x0D90UL)                    /*!< Memory Protection Unit */

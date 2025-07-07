@@ -2065,6 +2065,7 @@ typedef struct
   #define DWT                 ((DWT_Type       *)     DWT_BASE         ) /*!< DWT configuration struct */
   #define TPIU                ((TPIU_Type      *)     TPIU_BASE        ) /*!< TPIU configuration struct */
   #define DCBx                ((DCB_Type       *)     DCB_BASE         ) /*!< DCB configuration struct */
+                                                                         /*!< #CUSTOM@NDRS : DCB -> DCBx for compatibility with MSVC */
   #define DIB                 ((DIB_Type       *)     DIB_BASE         ) /*!< DIB configuration struct */
 
   #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1U)

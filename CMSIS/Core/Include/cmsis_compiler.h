@@ -275,7 +275,7 @@
     #define __ALIAS(x)                             __attribute__ ((alias(x)))
   #endif
 
-#elif defined(_MSC_VER ) /* #CUSTOM@NDRS */
+#elif defined(_MSC_VER) /* #CUSTOM@NDRS */
 #ifndef __STATIC_INLINE
 #define __STATIC_INLINE                        static inline
 #endif
@@ -383,6 +383,10 @@ __STATIC_FORCEINLINE uint32_t __get_IPSR(void) {
 
 __STATIC_FORCEINLINE uint32_t __get_CONTROL(void) {
     return (__regConTrol);
+}
+
+__STATIC_FORCEINLINE void __set_FPSCR(uint32_t fpscr) {
+    /* pass */
 }
 
 __STATIC_FORCEINLINE void __set_MSP(uint32_t topOfMainStack) {

@@ -405,6 +405,10 @@ __STATIC_INLINE void __set_PRIMASK(uint32_t priMask) {
     /* pass */
 }
 
+__STATIC_FORCEINLINE void __set_BASEPRI(uint32_t basePri) {
+    /* pass */
+}
+
 __STATIC_FORCEINLINE uint32_t __RBIT(uint32_t value) {
     uint32_t result;
     uint32_t s = (4U /*sizeof(v)*/ * 8U) - 1U; /* extra shift needed at end */

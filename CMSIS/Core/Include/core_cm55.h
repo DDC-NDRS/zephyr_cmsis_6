@@ -3884,30 +3884,26 @@ typedef struct
            priority bits (__NVIC_PRIO_BITS), the smallest possible priority group is set.
   \param [in]      PriorityGroup  Priority grouping field.
  */
-__STATIC_INLINE void __NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
-{
-  uint32_t reg_value;
-  uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);             /* only values 0..7 are used          */
+__STATIC_INLINE void __NVIC_SetPriorityGrouping(uint32_t PriorityGroup) {
+    uint32_t reg_value;
+    uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);             /* only values 0..7 are used          */
 
-  reg_value  =  SCB->AIRCR;                                                   /* read old register configuration    */
-  reg_value &= ~((uint32_t)(SCB_AIRCR_VECTKEY_Msk | SCB_AIRCR_PRIGROUP_Msk)); /* clear bits to change               */
-  reg_value  =  (reg_value                                   |
-                ((uint32_t)0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |
-                (PriorityGroupTmp << SCB_AIRCR_PRIGROUP_Pos)  );              /* Insert write key and priority group */
-  SCB->AIRCR =  reg_value;
+    reg_value = SCB->AIRCR;                                                     /* read old register configuration    */
+    reg_value &= ~((uint32_t)(SCB_AIRCR_VECTKEY_Msk | SCB_AIRCR_PRIGROUP_Msk)); /* clear bits to change               */
+    reg_value  = (reg_value                                   |
+                 ((uint32_t)0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |
+                 (PriorityGroupTmp << SCB_AIRCR_PRIGROUP_Pos)); /* Insert write key and priority group */
+    SCB->AIRCR = reg_value;
 }
-
 
 /**
   \brief   Get Priority Grouping
   \details Reads the priority grouping field from the NVIC Interrupt Controller.
   \return                Priority grouping field (SCB->AIRCR [10:8] PRIGROUP field).
  */
-__STATIC_INLINE uint32_t __NVIC_GetPriorityGrouping(void)
-{
-  return ((uint32_t)((SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) >> SCB_AIRCR_PRIGROUP_Pos));
+__STATIC_INLINE uint32_t __NVIC_GetPriorityGrouping(void) {
+    return ((uint32_t)((SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) >> SCB_AIRCR_PRIGROUP_Pos));
 }
-
 
 /**
   \brief   Enable Interrupt
@@ -3915,16 +3911,13 @@ __STATIC_INLINE uint32_t __NVIC_GetPriorityGrouping(void)
   \param [in]      IRQn  Device specific interrupt number.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    __COMPILER_BARRIER();
-    NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-    __COMPILER_BARRIER();
-  }
+__STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        __COMPILER_BARRIER();
+        NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+        __COMPILER_BARRIER();
+    }
 }
-
 
 /**
   \brief   Get Interrupt Enable status
@@ -3934,18 +3927,16 @@ __STATIC_INLINE void __NVIC_EnableIRQ(IRQn_Type IRQn)
   \return             1  Interrupt is enabled.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE uint32_t __NVIC_GetEnableIRQ(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return((uint32_t)(((NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+__STATIC_INLINE uint32_t __NVIC_GetEnableIRQ(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        return ((uint32_t)(((NVIC->ISER[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL)
+                               ? 1UL
+                               : 0UL));
+    }
+    else {
+        return (0U);
+    }
 }
-
 
 /**
   \brief   Disable Interrupt
@@ -3953,16 +3944,13 @@ __STATIC_INLINE uint32_t __NVIC_GetEnableIRQ(IRQn_Type IRQn)
   \param [in]      IRQn  Device specific interrupt number.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE void __NVIC_DisableIRQ(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC->ICER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-    __DSB();
-    __ISB();
-  }
+__STATIC_INLINE void __NVIC_DisableIRQ(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC->ICER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+        __DSB();
+        __ISB();
+    }
 }
-
 
 /**
   \brief   Get Pending Interrupt
@@ -3972,18 +3960,16 @@ __STATIC_INLINE void __NVIC_DisableIRQ(IRQn_Type IRQn)
   \return             1  Interrupt status is pending.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE uint32_t __NVIC_GetPendingIRQ(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return((uint32_t)(((NVIC->ISPR[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+__STATIC_INLINE uint32_t __NVIC_GetPendingIRQ(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        return ((uint32_t)(((NVIC->ISPR[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL)
+                               ? 1UL
+                               : 0UL));
+    }
+    else {
+        return (0U);
+    }
 }
-
 
 /**
   \brief   Set Pending Interrupt
@@ -3991,14 +3977,11 @@ __STATIC_INLINE uint32_t __NVIC_GetPendingIRQ(IRQn_Type IRQn)
   \param [in]      IRQn  Device specific interrupt number.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE void __NVIC_SetPendingIRQ(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC->ISPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-  }
+__STATIC_INLINE void __NVIC_SetPendingIRQ(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC->ISPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+    }
 }
-
 
 /**
   \brief   Clear Pending Interrupt
@@ -4006,14 +3989,11 @@ __STATIC_INLINE void __NVIC_SetPendingIRQ(IRQn_Type IRQn)
   \param [in]      IRQn  Device specific interrupt number.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE void __NVIC_ClearPendingIRQ(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC->ICPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-  }
+__STATIC_INLINE void __NVIC_ClearPendingIRQ(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC->ICPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+    }
 }
-
 
 /**
   \brief   Get Active Interrupt
@@ -4023,20 +4003,18 @@ __STATIC_INLINE void __NVIC_ClearPendingIRQ(IRQn_Type IRQn)
   \return             1  Interrupt status is active.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE uint32_t __NVIC_GetActive(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return((uint32_t)(((NVIC->IABR[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+__STATIC_INLINE uint32_t __NVIC_GetActive(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        return ((uint32_t)(((NVIC->IABR[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL)
+                               ? 1UL
+                               : 0UL));
+    }
+    else {
+        return (0U);
+    }
 }
 
-
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**
   \brief   Get Interrupt Target State
   \details Reads the interrupt target field in the NVIC and returns the interrupt target bit for the device specific interrupt.
@@ -4045,18 +4023,16 @@ __STATIC_INLINE uint32_t __NVIC_GetActive(IRQn_Type IRQn)
   \return             1  if interrupt is assigned to Non Secure
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE uint32_t NVIC_GetTargetState(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return((uint32_t)(((NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+__STATIC_INLINE uint32_t NVIC_GetTargetState(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        return ((uint32_t)(((NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL)
+                               ? 1UL
+                               : 0UL));
+    }
+    else {
+        return (0U);
+    }
 }
-
 
 /**
   \brief   Set Interrupt Target State
@@ -4066,19 +4042,17 @@ __STATIC_INLINE uint32_t NVIC_GetTargetState(IRQn_Type IRQn)
                       1  if interrupt is assigned to Non Secure
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE uint32_t NVIC_SetTargetState(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] |=  ((uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL)));
-    return((uint32_t)(((NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+__STATIC_INLINE uint32_t NVIC_SetTargetState(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] |= ((uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL)));
+        return ((uint32_t)(((NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL)
+                               ? 1UL
+                               : 0UL));
+    }
+    else {
+        return (0U);
+    }
 }
-
 
 /**
   \brief   Clear Interrupt Target State
@@ -4088,20 +4062,18 @@ __STATIC_INLINE uint32_t NVIC_SetTargetState(IRQn_Type IRQn)
                       1  if interrupt is assigned to Non Secure
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE uint32_t NVIC_ClearTargetState(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] &= ~((uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL)));
-    return((uint32_t)(((NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+__STATIC_INLINE uint32_t NVIC_ClearTargetState(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] &= ~((uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL)));
+        return ((uint32_t)(((NVIC->ITNS[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL)
+                               ? 1UL
+                               : 0UL));
+    }
+    else {
+        return (0U);
+    }
 }
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
-
 
 /**
   \brief   Set Interrupt Priority
@@ -4112,18 +4084,15 @@ __STATIC_INLINE uint32_t NVIC_ClearTargetState(IRQn_Type IRQn)
   \param [in]  priority  Priority to set.
   \note    The priority cannot be set for every processor exception.
  */
-__STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC->IPR[((uint32_t)IRQn)]               = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
-  }
-  else
-  {
-    SCB->SHPR[(((uint32_t)IRQn) & 0xFUL)-4UL] = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
-  }
+__STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC->IPR[((uint32_t)IRQn)] = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
+    }
+    else {
+        SCB->SHPR[(((uint32_t)IRQn) & 0xFUL) - 4UL] =
+            (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
+    }
 }
-
 
 /**
   \brief   Get Interrupt Priority
@@ -4134,19 +4103,15 @@ __STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
   \return             Interrupt Priority.
                       Value is aligned automatically to the implemented priority bits of the microcontroller.
  */
-__STATIC_INLINE uint32_t __NVIC_GetPriority(IRQn_Type IRQn)
-{
+__STATIC_INLINE uint32_t __NVIC_GetPriority(IRQn_Type IRQn) {
 
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return(((uint32_t)NVIC->IPR[((uint32_t)IRQn)]               >> (8U - __NVIC_PRIO_BITS)));
-  }
-  else
-  {
-    return(((uint32_t)SCB->SHPR[(((uint32_t)IRQn) & 0xFUL)-4UL] >> (8U - __NVIC_PRIO_BITS)));
-  }
+    if ((int32_t)(IRQn) >= 0) {
+        return (((uint32_t)NVIC->IPR[((uint32_t)IRQn)] >> (8U - __NVIC_PRIO_BITS)));
+    }
+    else {
+        return (((uint32_t)SCB->SHPR[(((uint32_t)IRQn) & 0xFUL) - 4UL] >> (8U - __NVIC_PRIO_BITS)));
+    }
 }
-
 
 /**
   \brief   Encode Priority
@@ -4159,21 +4124,21 @@ __STATIC_INLINE uint32_t __NVIC_GetPriority(IRQn_Type IRQn)
   \param [in]       SubPriority  Subpriority value (starting from 0).
   \return                        Encoded priority. Value can be used in the function \ref NVIC_SetPriority().
  */
-__STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t PreemptPriority, uint32_t SubPriority)
-{
-  uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);   /* only values 0..7 are used          */
-  uint32_t PreemptPriorityBits;
-  uint32_t SubPriorityBits;
+__STATIC_INLINE uint32_t NVIC_EncodePriority(uint32_t PriorityGroup, uint32_t PreemptPriority, uint32_t SubPriority) {
+    uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL); /* only values 0..7 are used          */
+    uint32_t PreemptPriorityBits;
+    uint32_t SubPriorityBits;
 
-  PreemptPriorityBits = ((7UL - PriorityGroupTmp) > (uint32_t)(__NVIC_PRIO_BITS)) ? (uint32_t)(__NVIC_PRIO_BITS) : (uint32_t)(7UL - PriorityGroupTmp);
-  SubPriorityBits     = ((PriorityGroupTmp + (uint32_t)(__NVIC_PRIO_BITS)) < (uint32_t)7UL) ? (uint32_t)0UL : (uint32_t)((PriorityGroupTmp - 7UL) + (uint32_t)(__NVIC_PRIO_BITS));
+    PreemptPriorityBits = ((7UL - PriorityGroupTmp) > (uint32_t)(__NVIC_PRIO_BITS))
+                              ? (uint32_t)(__NVIC_PRIO_BITS)
+                              : (uint32_t)(7UL - PriorityGroupTmp);
+    SubPriorityBits     = ((PriorityGroupTmp + (uint32_t)(__NVIC_PRIO_BITS)) < (uint32_t)7UL)
+                              ? (uint32_t)0UL
+                              : (uint32_t)((PriorityGroupTmp - 7UL) + (uint32_t)(__NVIC_PRIO_BITS));
 
-  return (
-           ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
-           ((SubPriority     & (uint32_t)((1UL << (SubPriorityBits    )) - 1UL)))
-         );
+    return (((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
+            ((SubPriority & (uint32_t)((1UL << (SubPriorityBits)) - 1UL))));
 }
-
 
 /**
   \brief   Decode Priority
@@ -4186,19 +4151,22 @@ __STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t P
   \param [out] pPreemptPriority  Preemptive priority value (starting from 0).
   \param [out]     pSubPriority  Subpriority value (starting from 0).
  */
-__STATIC_INLINE void NVIC_DecodePriority (uint32_t Priority, uint32_t PriorityGroup, uint32_t* const pPreemptPriority, uint32_t* const pSubPriority)
-{
-  uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);   /* only values 0..7 are used          */
-  uint32_t PreemptPriorityBits;
-  uint32_t SubPriorityBits;
+__STATIC_INLINE void NVIC_DecodePriority(uint32_t Priority, uint32_t PriorityGroup, uint32_t* const pPreemptPriority,
+                                         uint32_t* const pSubPriority) {
+    uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL); /* only values 0..7 are used          */
+    uint32_t PreemptPriorityBits;
+    uint32_t SubPriorityBits;
 
-  PreemptPriorityBits = ((7UL - PriorityGroupTmp) > (uint32_t)(__NVIC_PRIO_BITS)) ? (uint32_t)(__NVIC_PRIO_BITS) : (uint32_t)(7UL - PriorityGroupTmp);
-  SubPriorityBits     = ((PriorityGroupTmp + (uint32_t)(__NVIC_PRIO_BITS)) < (uint32_t)7UL) ? (uint32_t)0UL : (uint32_t)((PriorityGroupTmp - 7UL) + (uint32_t)(__NVIC_PRIO_BITS));
+    PreemptPriorityBits = ((7UL - PriorityGroupTmp) > (uint32_t)(__NVIC_PRIO_BITS))
+                              ? (uint32_t)(__NVIC_PRIO_BITS)
+                              : (uint32_t)(7UL - PriorityGroupTmp);
+    SubPriorityBits     = ((PriorityGroupTmp + (uint32_t)(__NVIC_PRIO_BITS)) < (uint32_t)7UL)
+                              ? (uint32_t)0UL
+                              : (uint32_t)((PriorityGroupTmp - 7UL) + (uint32_t)(__NVIC_PRIO_BITS));
 
-  *pPreemptPriority = (Priority >> SubPriorityBits) & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL);
-  *pSubPriority     = (Priority                   ) & (uint32_t)((1UL << (SubPriorityBits    )) - 1UL);
+    *pPreemptPriority = (Priority >> SubPriorityBits) & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL);
+    *pSubPriority     = (Priority) & (uint32_t)((1UL << (SubPriorityBits)) - 1UL);
 }
-
 
 /**
   \brief   Set Interrupt Vector
@@ -4209,13 +4177,11 @@ __STATIC_INLINE void NVIC_DecodePriority (uint32_t Priority, uint32_t PriorityGr
   \param [in]   IRQn      Interrupt number
   \param [in]   vector    Address of interrupt handler function
  */
-__STATIC_INLINE void __NVIC_SetVector(IRQn_Type IRQn, uint32_t vector)
-{
-  uint32_t *vectors = (uint32_t *) ((uintptr_t) SCB->VTOR);
-  vectors[(int32_t)IRQn + NVIC_USER_IRQ_OFFSET] = vector;
-  __DSB();
+__STATIC_INLINE void __NVIC_SetVector(IRQn_Type IRQn, uint32_t vector) {
+    uint32_t* vectors                             = (uint32_t*)((uintptr_t)SCB->VTOR);
+    vectors[(int32_t)IRQn + NVIC_USER_IRQ_OFFSET] = vector;
+    __DSB();
 }
-
 
 /**
   \brief   Get Interrupt Vector
@@ -4225,33 +4191,30 @@ __STATIC_INLINE void __NVIC_SetVector(IRQn_Type IRQn, uint32_t vector)
   \param [in]   IRQn      Interrupt number.
   \return                 Address of interrupt handler function
  */
-__STATIC_INLINE uint32_t __NVIC_GetVector(IRQn_Type IRQn)
-{
-  uint32_t *vectors = (uint32_t *) ((uintptr_t) SCB->VTOR);
-  return vectors[(int32_t)IRQn + NVIC_USER_IRQ_OFFSET];
+__STATIC_INLINE uint32_t __NVIC_GetVector(IRQn_Type IRQn) {
+    uint32_t* vectors = (uint32_t*)((uintptr_t)SCB->VTOR);
+    return vectors[(int32_t)IRQn + NVIC_USER_IRQ_OFFSET];
 }
-
 
 /**
   \brief   System Reset
   \details Initiates a system reset request to reset the MCU.
  */
-__NO_RETURN __STATIC_INLINE void __NVIC_SystemReset(void)
-{
-  __DSB();                                                          /* Ensure all outstanding memory accesses included
-                                                                       buffered write are completed before reset */
-  SCB->AIRCR  = (uint32_t)((0x5FAUL << SCB_AIRCR_VECTKEY_Pos)    |
-                           (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) |
-                            SCB_AIRCR_SYSRESETREQ_Msk    );         /* Keep priority group unchanged */
-  __DSB();                                                          /* Ensure completion of memory access */
+__NO_RETURN __STATIC_INLINE void __NVIC_SystemReset(void) {
+    __DSB(); /* Ensure all outstanding memory accesses included
+                buffered write are completed before reset */
+    SCB->AIRCR = (uint32_t)((0x5FAUL << SCB_AIRCR_VECTKEY_Pos)    |
+                            (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) |
+                            SCB_AIRCR_SYSRESETREQ_Msk); /* Keep priority group unchanged */
+    __DSB();                                            /* Ensure completion of memory access */
 
-  for(;;)                                                           /* wait until reset */
-  {
-    __NOP();
-  }
+    for (;;) /* wait until reset */
+    {
+        __NOP();
+    }
 }
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**
   \brief   Set Priority Grouping (non-secure)
   \details Sets the non-secure priority grouping field when in secure state using the required unlock sequence.
@@ -4261,30 +4224,26 @@ __NO_RETURN __STATIC_INLINE void __NVIC_SystemReset(void)
            priority bits (__NVIC_PRIO_BITS), the smallest possible priority group is set.
   \param [in]      PriorityGroup  Priority grouping field.
  */
-__STATIC_INLINE void TZ_NVIC_SetPriorityGrouping_NS(uint32_t PriorityGroup)
-{
-  uint32_t reg_value;
-  uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);             /* only values 0..7 are used          */
+__STATIC_INLINE void TZ_NVIC_SetPriorityGrouping_NS(uint32_t PriorityGroup) {
+    uint32_t reg_value;
+    uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL); /* only values 0..7 are used          */
 
-  reg_value  =  SCB_NS->AIRCR;                                                /* read old register configuration    */
-  reg_value &= ~((uint32_t)(SCB_AIRCR_VECTKEY_Msk | SCB_AIRCR_PRIGROUP_Msk)); /* clear bits to change               */
-  reg_value  =  (reg_value                                   |
-                ((uint32_t)0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |
-                (PriorityGroupTmp << SCB_AIRCR_PRIGROUP_Pos)  );              /* Insert write key and priority group */
-  SCB_NS->AIRCR =  reg_value;
+    reg_value  = SCB_NS->AIRCR;                                                  /* read old register configuration    */
+    reg_value &= ~((uint32_t)(SCB_AIRCR_VECTKEY_Msk | SCB_AIRCR_PRIGROUP_Msk)); /* clear bits to change               */
+    reg_value  = (reg_value                                   |
+                 ((uint32_t)0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |
+                 (PriorityGroupTmp << SCB_AIRCR_PRIGROUP_Pos)); /* Insert write key and priority group */
+    SCB_NS->AIRCR = reg_value;
 }
-
 
 /**
   \brief   Get Priority Grouping (non-secure)
   \details Reads the priority grouping field from the non-secure NVIC when in secure state.
   \return                Priority grouping field (SCB->AIRCR [10:8] PRIGROUP field).
  */
-__STATIC_INLINE uint32_t TZ_NVIC_GetPriorityGrouping_NS(void)
-{
-  return ((uint32_t)((SCB_NS->AIRCR & SCB_AIRCR_PRIGROUP_Msk) >> SCB_AIRCR_PRIGROUP_Pos));
+__STATIC_INLINE uint32_t TZ_NVIC_GetPriorityGrouping_NS(void) {
+    return ((uint32_t)((SCB_NS->AIRCR & SCB_AIRCR_PRIGROUP_Msk) >> SCB_AIRCR_PRIGROUP_Pos));
 }
-
 
 /**
   \brief   Enable Interrupt (non-secure)
@@ -4292,14 +4251,11 @@ __STATIC_INLINE uint32_t TZ_NVIC_GetPriorityGrouping_NS(void)
   \param [in]      IRQn  Device specific interrupt number.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE void TZ_NVIC_EnableIRQ_NS(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC_NS->ISER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-  }
+__STATIC_INLINE void TZ_NVIC_EnableIRQ_NS(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC_NS->ISER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+    }
 }
-
 
 /**
   \brief   Get Interrupt Enable status (non-secure)
@@ -4309,18 +4265,16 @@ __STATIC_INLINE void TZ_NVIC_EnableIRQ_NS(IRQn_Type IRQn)
   \return             1  Interrupt is enabled.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE uint32_t TZ_NVIC_GetEnableIRQ_NS(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return((uint32_t)(((NVIC_NS->ISER[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+__STATIC_INLINE uint32_t TZ_NVIC_GetEnableIRQ_NS(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        return ((uint32_t)(((NVIC_NS->ISER[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL)
+                               ? 1UL
+                               : 0UL));
+    }
+    else {
+        return (0U);
+    }
 }
-
 
 /**
   \brief   Disable Interrupt (non-secure)
@@ -4328,14 +4282,11 @@ __STATIC_INLINE uint32_t TZ_NVIC_GetEnableIRQ_NS(IRQn_Type IRQn)
   \param [in]      IRQn  Device specific interrupt number.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE void TZ_NVIC_DisableIRQ_NS(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC_NS->ICER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-  }
+__STATIC_INLINE void TZ_NVIC_DisableIRQ_NS(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC_NS->ICER[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+    }
 }
-
 
 /**
   \brief   Get Pending Interrupt (non-secure)
@@ -4345,18 +4296,16 @@ __STATIC_INLINE void TZ_NVIC_DisableIRQ_NS(IRQn_Type IRQn)
   \return             1  Interrupt status is pending.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE uint32_t TZ_NVIC_GetPendingIRQ_NS(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return((uint32_t)(((NVIC_NS->ISPR[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+__STATIC_INLINE uint32_t TZ_NVIC_GetPendingIRQ_NS(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        return ((uint32_t)(((NVIC_NS->ISPR[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL)
+                               ? 1UL
+                               : 0UL));
+    }
+    else {
+        return (0U);
+    }
 }
-
 
 /**
   \brief   Set Pending Interrupt (non-secure)
@@ -4364,14 +4313,11 @@ __STATIC_INLINE uint32_t TZ_NVIC_GetPendingIRQ_NS(IRQn_Type IRQn)
   \param [in]      IRQn  Device specific interrupt number.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE void TZ_NVIC_SetPendingIRQ_NS(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC_NS->ISPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-  }
+__STATIC_INLINE void TZ_NVIC_SetPendingIRQ_NS(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC_NS->ISPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+    }
 }
-
 
 /**
   \brief   Clear Pending Interrupt (non-secure)
@@ -4379,14 +4325,11 @@ __STATIC_INLINE void TZ_NVIC_SetPendingIRQ_NS(IRQn_Type IRQn)
   \param [in]      IRQn  Device specific interrupt number.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE void TZ_NVIC_ClearPendingIRQ_NS(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC_NS->ICPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
-  }
+__STATIC_INLINE void TZ_NVIC_ClearPendingIRQ_NS(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC_NS->ICPR[(((uint32_t)IRQn) >> 5UL)] = (uint32_t)(1UL << (((uint32_t)IRQn) & 0x1FUL));
+    }
 }
-
 
 /**
   \brief   Get Active Interrupt (non-secure)
@@ -4396,18 +4339,16 @@ __STATIC_INLINE void TZ_NVIC_ClearPendingIRQ_NS(IRQn_Type IRQn)
   \return             1  Interrupt status is active.
   \note    IRQn must not be negative.
  */
-__STATIC_INLINE uint32_t TZ_NVIC_GetActive_NS(IRQn_Type IRQn)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return((uint32_t)(((NVIC_NS->IABR[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
-  }
-  else
-  {
-    return(0U);
-  }
+__STATIC_INLINE uint32_t TZ_NVIC_GetActive_NS(IRQn_Type IRQn) {
+    if ((int32_t)(IRQn) >= 0) {
+        return ((uint32_t)(((NVIC_NS->IABR[(((uint32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)IRQn) & 0x1FUL))) != 0UL)
+                               ? 1UL
+                               : 0UL));
+    }
+    else {
+        return (0U);
+    }
 }
-
 
 /**
   \brief   Set Interrupt Priority (non-secure)
@@ -4418,18 +4359,15 @@ __STATIC_INLINE uint32_t TZ_NVIC_GetActive_NS(IRQn_Type IRQn)
   \param [in]  priority  Priority to set.
   \note    The priority cannot be set for every non-secure processor exception.
  */
-__STATIC_INLINE void TZ_NVIC_SetPriority_NS(IRQn_Type IRQn, uint32_t priority)
-{
-  if ((int32_t)(IRQn) >= 0)
-  {
-    NVIC_NS->IPR[((uint32_t)IRQn)]               = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
-  }
-  else
-  {
-    SCB_NS->SHPR[(((uint32_t)IRQn) & 0xFUL)-4UL] = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
-  }
+__STATIC_INLINE void TZ_NVIC_SetPriority_NS(IRQn_Type IRQn, uint32_t priority) {
+    if ((int32_t)(IRQn) >= 0) {
+        NVIC_NS->IPR[((uint32_t)IRQn)] = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
+    }
+    else {
+        SCB_NS->SHPR[(((uint32_t)IRQn) & 0xFUL) - 4UL] =
+            (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
+    }
 }
-
 
 /**
   \brief   Get Interrupt Priority (non-secure)
@@ -4439,17 +4377,14 @@ __STATIC_INLINE void TZ_NVIC_SetPriority_NS(IRQn_Type IRQn, uint32_t priority)
   \param [in]   IRQn  Interrupt number.
   \return             Interrupt Priority. Value is aligned automatically to the implemented priority bits of the microcontroller.
  */
-__STATIC_INLINE uint32_t TZ_NVIC_GetPriority_NS(IRQn_Type IRQn)
-{
+__STATIC_INLINE uint32_t TZ_NVIC_GetPriority_NS(IRQn_Type IRQn) {
 
-  if ((int32_t)(IRQn) >= 0)
-  {
-    return(((uint32_t)NVIC_NS->IPR[((uint32_t)IRQn)]               >> (8U - __NVIC_PRIO_BITS)));
-  }
-  else
-  {
-    return(((uint32_t)SCB_NS->SHPR[(((uint32_t)IRQn) & 0xFUL)-4UL] >> (8U - __NVIC_PRIO_BITS)));
-  }
+    if ((int32_t)(IRQn) >= 0) {
+        return (((uint32_t)NVIC_NS->IPR[((uint32_t)IRQn)] >> (8U - __NVIC_PRIO_BITS)));
+    }
+    else {
+        return (((uint32_t)SCB_NS->SHPR[(((uint32_t)IRQn) & 0xFUL) - 4UL] >> (8U - __NVIC_PRIO_BITS)));
+    }
 }
 #endif /*  defined (__ARM_FEATURE_CMSE) &&(__ARM_FEATURE_CMSE == 3U) */
 
@@ -4457,15 +4392,15 @@ __STATIC_INLINE uint32_t TZ_NVIC_GetPriority_NS(IRQn_Type IRQn)
 
 /* ##########################  MPU functions  #################################### */
 
-#if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1U)
+#if defined(__MPU_PRESENT) && (__MPU_PRESENT == 1U)
 
-  #include "m-profile/armv8m_mpu.h"
+#include "m-profile/armv8m_mpu.h"
 
 #endif
 
 /* ##########################  PMU functions and events  #################################### */
 
-#if defined (__PMU_PRESENT) && (__PMU_PRESENT == 1U)
+#if defined(__PMU_PRESENT) && (__PMU_PRESENT == 1U)
 
 #include "m-profile/armv8m_pmu.h"
 
@@ -4539,25 +4474,20 @@ __STATIC_INLINE uint32_t TZ_NVIC_GetPriority_NS(IRQn_Type IRQn)
    - \b  1: Single precision FPU
    - \b  2: Double + Single precision FPU
  */
-__STATIC_INLINE uint32_t SCB_GetFPUType(void)
-{
-  uint32_t mvfr0;
+__STATIC_INLINE uint32_t SCB_GetFPUType(void) {
+    uint32_t mvfr0;
 
-  mvfr0 = FPU->MVFR0;
-  if      ((mvfr0 & (FPU_MVFR0_FPSP_Msk | FPU_MVFR0_FPDP_Msk)) == 0x220U)
-  {
-    return 2U;           /* Double + Single precision FPU */
-  }
-  else if ((mvfr0 & (FPU_MVFR0_FPSP_Msk | FPU_MVFR0_FPDP_Msk)) == 0x020U)
-  {
-    return 1U;           /* Single precision FPU */
-  }
-  else
-  {
-    return 0U;           /* No FPU */
-  }
+    mvfr0 = FPU->MVFR0;
+    if ((mvfr0 & (FPU_MVFR0_FPSP_Msk | FPU_MVFR0_FPDP_Msk)) == 0x220U) {
+        return 2U; /* Double + Single precision FPU */
+    }
+    else if ((mvfr0 & (FPU_MVFR0_FPSP_Msk | FPU_MVFR0_FPDP_Msk)) == 0x020U) {
+        return 1U; /* Single precision FPU */
+    }
+    else {
+        return 0U; /* No FPU */
+    }
 }
-
 
 /*@} end of CMSIS_Core_FpuFunctions */
 
@@ -4577,34 +4507,28 @@ __STATIC_INLINE uint32_t SCB_GetFPUType(void)
    - \b  1: Integer Vector Extension (MVE-I)
    - \b  2: Floating-point Vector Extension (MVE-F)
  */
-__STATIC_INLINE uint32_t SCB_GetMVEType(void)
-{
-  const uint32_t mvfr1 = FPU->MVFR1;
-  if      ((mvfr1 & FPU_MVFR1_MVE_Msk) == (0x2U << FPU_MVFR1_MVE_Pos))
-  {
-    return 2U;
-  }
-  else if ((mvfr1 & FPU_MVFR1_MVE_Msk) == (0x1U << FPU_MVFR1_MVE_Pos))
-  {
-    return 1U;
-  }
-  else
-  {
-    return 0U;
-  }
-}
+__STATIC_INLINE uint32_t SCB_GetMVEType(void) {
+    uint32_t const mvfr1 = FPU->MVFR1;
 
+    if ((mvfr1 & FPU_MVFR1_MVE_Msk) == (0x2U << FPU_MVFR1_MVE_Pos)) {
+        return 2U;
+    }
+    else if ((mvfr1 & FPU_MVFR1_MVE_Msk) == (0x1U << FPU_MVFR1_MVE_Pos)) {
+        return 1U;
+    }
+    else {
+        return 0U;
+    }
+}
 
 /*@} end of CMSIS_Core_MveFunctions */
 
-
 /* ##########################  Cache functions  #################################### */
 
-#if ((defined (__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1U)) || \
-     (defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)))
-  #include "m-profile/armv7m_cachel1.h"
+#if ((defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1U)) || \
+    (defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)))
+#include "m-profile/armv7m_cachel1.h"
 #endif
-
 
 /* ##########################   SAU functions  #################################### */
 /**
@@ -4614,34 +4538,27 @@ __STATIC_INLINE uint32_t SCB_GetMVEType(void)
   @{
  */
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
 /**
   \brief   Enable SAU
   \details Enables the Security Attribution Unit (SAU).
  */
-__STATIC_INLINE void TZ_SAU_Enable(void)
-{
-    SAU->CTRL |=  (SAU_CTRL_ENABLE_Msk);
+__STATIC_INLINE void TZ_SAU_Enable(void) {
+    SAU->CTRL |= (SAU_CTRL_ENABLE_Msk);
 }
-
-
 
 /**
   \brief   Disable SAU
   \details Disables the Security Attribution Unit (SAU).
  */
-__STATIC_INLINE void TZ_SAU_Disable(void)
-{
+__STATIC_INLINE void TZ_SAU_Disable(void) {
     SAU->CTRL &= ~(SAU_CTRL_ENABLE_Msk);
 }
 
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
 /*@} end of CMSIS_Core_SAUFunctions */
-
-
-
 
 /* ##################################    Debug Control function  ############################################ */
 /**
@@ -4651,14 +4568,12 @@ __STATIC_INLINE void TZ_SAU_Disable(void)
   @{
  */
 
-
 /**
   \brief   Set Debug Authentication Control Register
   \details writes to Debug Authentication Control register.
   \param [in]  value  value to be writen.
  */
-__STATIC_INLINE void DCB_SetAuthCtrl(uint32_t value)
-{
+__STATIC_INLINE void DCB_SetAuthCtrl(uint32_t value) {
     __DSB();
     __ISB();
     DCB->DAUTHCTRL = value;
@@ -4666,26 +4581,22 @@ __STATIC_INLINE void DCB_SetAuthCtrl(uint32_t value)
     __ISB();
 }
 
-
 /**
   \brief   Get Debug Authentication Control Register
   \details Reads Debug Authentication Control register.
   \return             Debug Authentication Control Register.
  */
-__STATIC_INLINE uint32_t DCB_GetAuthCtrl(void)
-{
+__STATIC_INLINE uint32_t DCB_GetAuthCtrl(void) {
     return (DCB->DAUTHCTRL);
 }
 
-
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**
   \brief   Set Debug Authentication Control Register (non-secure)
   \details writes to non-secure Debug Authentication Control register when in secure state.
   \param [in]  value  value to be writen
  */
-__STATIC_INLINE void TZ_DCB_SetAuthCtrl_NS(uint32_t value)
-{
+__STATIC_INLINE void TZ_DCB_SetAuthCtrl_NS(uint32_t value) {
     __DSB();
     __ISB();
     DCB_NS->DAUTHCTRL = value;
@@ -4693,22 +4604,17 @@ __STATIC_INLINE void TZ_DCB_SetAuthCtrl_NS(uint32_t value)
     __ISB();
 }
 
-
 /**
   \brief   Get Debug Authentication Control Register (non-secure)
   \details Reads non-secure Debug Authentication Control register when in secure state.
   \return             Debug Authentication Control Register.
  */
-__STATIC_INLINE uint32_t TZ_DCB_GetAuthCtrl_NS(void)
-{
+__STATIC_INLINE uint32_t TZ_DCB_GetAuthCtrl_NS(void) {
     return (DCB_NS->DAUTHCTRL);
 }
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
 /*@} end of CMSIS_Core_DCBFunctions */
-
-
-
 
 /* ##################################    Debug Identification function  ############################################ */
 /**
@@ -4718,34 +4624,27 @@ __STATIC_INLINE uint32_t TZ_DCB_GetAuthCtrl_NS(void)
   @{
  */
 
-
 /**
   \brief   Get Debug Authentication Status Register
   \details Reads Debug Authentication Status register.
   \return             Debug Authentication Status Register.
  */
-__STATIC_INLINE uint32_t DIB_GetAuthStatus(void)
-{
+__STATIC_INLINE uint32_t DIB_GetAuthStatus(void) {
     return (DIB->DAUTHSTATUS);
 }
 
-
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**
   \brief   Get Debug Authentication Status Register (non-secure)
   \details Reads non-secure Debug Authentication Status register when in secure state.
   \return             Debug Authentication Status Register.
  */
-__STATIC_INLINE uint32_t TZ_DIB_GetAuthStatus_NS(void)
-{
+__STATIC_INLINE uint32_t TZ_DIB_GetAuthStatus_NS(void) {
     return (DIB_NS->DAUTHSTATUS);
 }
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
 /*@} end of CMSIS_Core_DCBFunctions */
-
-
-
 
 /* ##################################    SysTick function  ############################################ */
 /**
@@ -4755,7 +4654,7 @@ __STATIC_INLINE uint32_t TZ_DIB_GetAuthStatus_NS(void)
   @{
  */
 
-#if defined (__Vendor_SysTickConfig) && (__Vendor_SysTickConfig == 0U)
+#if defined(__Vendor_SysTickConfig) && (__Vendor_SysTickConfig == 0U)
 
 /**
   \brief   System Tick Configuration
@@ -4768,23 +4667,21 @@ __STATIC_INLINE uint32_t TZ_DIB_GetAuthStatus_NS(void)
            function <b>SysTick_Config</b> is not included. In this case, the file <b><i>device</i>.h</b>
            must contain a vendor-specific implementation of this function.
  */
-__STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
-{
-  if ((ticks - 1UL) > SysTick_LOAD_RELOAD_Msk)
-  {
-    return (1UL);                                                   /* Reload value impossible */
-  }
+__STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks) {
+    if ((ticks - 1UL) > SysTick_LOAD_RELOAD_Msk) {
+        return (1UL); /* Reload value impossible */
+    }
 
-  SysTick->LOAD  = (uint32_t)(ticks - 1UL);                         /* set reload register */
-  NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
-  SysTick->VAL   = 0UL;                                             /* Load the SysTick Counter Value */
-  SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
-                   SysTick_CTRL_TICKINT_Msk   |
-                   SysTick_CTRL_ENABLE_Msk;                         /* Enable SysTick IRQ and SysTick Timer */
-  return (0UL);                                                     /* Function successful */
+    SysTick->LOAD = (uint32_t)(ticks - 1UL);                         /* set reload register */
+    NVIC_SetPriority(SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
+    SysTick->VAL  = 0UL;                                             /* Load the SysTick Counter Value */
+    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+                    SysTick_CTRL_TICKINT_Msk   |
+                    SysTick_CTRL_ENABLE_Msk; /* Enable SysTick IRQ and SysTick Timer */
+    return (0UL);                            /* Function successful */
 }
 
-#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /**
   \brief   System Tick Configuration (non-secure)
   \details Initializes the non-secure System Timer and its interrupt when in secure state, and starts the System Tick Timer.
@@ -4797,28 +4694,24 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
            must contain a vendor-specific implementation of this function.
 
  */
-__STATIC_INLINE uint32_t TZ_SysTick_Config_NS(uint32_t ticks)
-{
-  if ((ticks - 1UL) > SysTick_LOAD_RELOAD_Msk)
-  {
-    return (1UL);                                                         /* Reload value impossible */
-  }
+__STATIC_INLINE uint32_t TZ_SysTick_Config_NS(uint32_t ticks) {
+    if ((ticks - 1UL) > SysTick_LOAD_RELOAD_Msk) {
+        return (1UL); /* Reload value impossible */
+    }
 
-  SysTick_NS->LOAD  = (uint32_t)(ticks - 1UL);                            /* set reload register */
-  TZ_NVIC_SetPriority_NS (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
-  SysTick_NS->VAL   = 0UL;                                                /* Load the SysTick Counter Value */
-  SysTick_NS->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
-                      SysTick_CTRL_TICKINT_Msk   |
-                      SysTick_CTRL_ENABLE_Msk;                            /* Enable SysTick IRQ and SysTick Timer */
-  return (0UL);                                                           /* Function successful */
+    SysTick_NS->LOAD = (uint32_t)(ticks - 1UL);                            /* set reload register */
+    TZ_NVIC_SetPriority_NS(SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
+    SysTick_NS->VAL  = 0UL;                                                /* Load the SysTick Counter Value */
+    SysTick_NS->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
+                       SysTick_CTRL_TICKINT_Msk   |
+                       SysTick_CTRL_ENABLE_Msk; /* Enable SysTick IRQ and SysTick Timer */
+    return (0UL);                               /* Function successful */
 }
 #endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
 #endif
 
 /*@} end of CMSIS_Core_SysTickFunctions */
-
-
 
 /* ##################################### Debug In/Output function ########################################### */
 /**
@@ -4828,9 +4721,8 @@ __STATIC_INLINE uint32_t TZ_SysTick_Config_NS(uint32_t ticks)
   @{
  */
 
-extern volatile int32_t ITM_RxBuffer;                              /*!< External variable to receive characters. */
-#define                 ITM_RXBUFFER_EMPTY  ((int32_t)0x5AA55AA5U) /*!< Value identifying \ref ITM_RxBuffer is ready for next character. */
-
+extern volatile int32_t ITM_RxBuffer; /*!< External variable to receive characters. */
+#define ITM_RXBUFFER_EMPTY ((int32_t)0x5AA55AA5U) /*!< Value identifying \ref ITM_RxBuffer is ready for next character. */
 
 /**
   \brief   ITM Send Character
@@ -4840,20 +4732,16 @@ extern volatile int32_t ITM_RxBuffer;                              /*!< External
   \param [in]     ch  Character to transmit.
   \returns            Character to transmit.
  */
-__STATIC_INLINE uint32_t ITM_SendChar (uint32_t ch)
-{
-  if (((ITM->TCR & ITM_TCR_ITMENA_Msk) != 0UL) &&      /* ITM enabled */
-      ((ITM->TER & 1UL               ) != 0UL)   )     /* ITM Port #0 enabled */
-  {
-    while (ITM->PORT[0U].u32 == 0UL)
-    {
-      __NOP();
+__STATIC_INLINE uint32_t ITM_SendChar(uint32_t ch) {
+    if (((ITM->TCR & ITM_TCR_ITMENA_Msk) != 0UL) && /* ITM enabled */
+        ((ITM->TER & 1UL) != 0UL)) {                /* ITM Port #0 enabled */
+        while (ITM->PORT[0U].u32 == 0UL) {
+            __NOP();
+        }
+        ITM->PORT[0U].u8 = (uint8_t)ch;
     }
-    ITM->PORT[0U].u8 = (uint8_t)ch;
-  }
-  return (ch);
+    return (ch);
 }
-
 
 /**
   \brief   ITM Receive Character
@@ -4861,19 +4749,16 @@ __STATIC_INLINE uint32_t ITM_SendChar (uint32_t ch)
   \return             Received character.
   \return         -1  No character pending.
  */
-__STATIC_INLINE int32_t ITM_ReceiveChar (void)
-{
-  int32_t ch = -1;                           /* no character available */
+__STATIC_INLINE int32_t ITM_ReceiveChar(void) {
+    int32_t ch = -1; /* no character available */
 
-  if (ITM_RxBuffer != ITM_RXBUFFER_EMPTY)
-  {
-    ch = ITM_RxBuffer;
-    ITM_RxBuffer = ITM_RXBUFFER_EMPTY;       /* ready for next character */
-  }
+    if (ITM_RxBuffer != ITM_RXBUFFER_EMPTY) {
+        ch = ITM_RxBuffer;
+        ITM_RxBuffer = ITM_RXBUFFER_EMPTY; /* ready for next character */
+    }
 
-  return (ch);
+    return (ch);
 }
-
 
 /**
   \brief   ITM Check Character
@@ -4881,23 +4766,17 @@ __STATIC_INLINE int32_t ITM_ReceiveChar (void)
   \return          0  No character available.
   \return          1  Character available.
  */
-__STATIC_INLINE int32_t ITM_CheckChar (void)
-{
+__STATIC_INLINE int32_t ITM_CheckChar(void) {
 
-  if (ITM_RxBuffer == ITM_RXBUFFER_EMPTY)
-  {
-    return (0);                              /* no character available */
-  }
-  else
-  {
-    return (1);                              /*    character available */
-  }
+    if (ITM_RxBuffer == ITM_RXBUFFER_EMPTY) {
+        return (0); /* no character available */
+    }
+    else {
+        return (1); /*    character available */
+    }
 }
 
 /*@} end of CMSIS_core_DebugFunctions */
-
-
-
 
 #ifdef __cplusplus
 }

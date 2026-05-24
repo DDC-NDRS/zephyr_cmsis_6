@@ -232,6 +232,10 @@
 #define __NO_RETURN
 #endif
 
+#ifndef __WEAK
+#define __WEAK
+#endif
+
 // Pushes the current packing alignment value on the internal compiler stack, and sets the current packing alignment value to n (1).
 #pragma pack(push, 1)   
 #ifndef __UNALIGNED_UINT16_WRITE

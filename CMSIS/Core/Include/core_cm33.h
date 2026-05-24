@@ -2075,6 +2075,8 @@ typedef struct
 
 /* Memory mapping of Core Hardware */
 #if defined(_MSC_VER) /* #CUSTOM@NDRS */
+  #include "mcu_reg_stub.h"
+
   #define SCS_BASE            (0xE000E000UL)                             /*!< System Control Space Base Address */
   #define ITM_BASE            (0xE0000000UL)                             /*!< ITM Base Address */
   #define DWT_BASE            (0xE0001000UL)                             /*!< DWT Base Address */
